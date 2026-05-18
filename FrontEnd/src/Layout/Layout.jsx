@@ -3,7 +3,7 @@ import Topbar from "@/components/Topbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 
-const layout = () => {
+const Layout = () => {
   return (
     //sidebar
     <SidebarProvider>
@@ -18,4 +18,4 @@ const layout = () => {
   );
 };
 
-export default layout;
+export default Layout;
