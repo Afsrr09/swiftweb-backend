@@ -11,9 +11,13 @@ export const useFetch = (url, options = {}, dependencies = []) => {
       setLoading(true);
       try {
         const response = await fetch(url, {
-          ...options,
-          credentials: "include", // this sends cookies
-        });
+  ...options,
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json",
+    ...options.headers,
+  },
+});
         const responseData = await response.json();
         // 🔴 If token expired or unauthorized
         if (response.status === 401) {
