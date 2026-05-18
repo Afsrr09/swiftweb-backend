@@ -10,12 +10,13 @@ export const useFetch = (url, options = {}, dependencies = []) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(url, {
+      const response = await fetch(url, {
   ...options,
   credentials: "include",
   headers: {
     "Content-Type": "application/json",
     ...options.headers,
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
         const responseData = await response.json();
