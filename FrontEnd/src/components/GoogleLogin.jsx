@@ -1,8 +1,8 @@
 import React, { use } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../helpers/firebase.js";
+import { auth, provider } from "@/helpers/firebase.js";
 import { showToast } from "@/helpers/showToast";
 import { useNavigate } from "react-router-dom";
 import { getEnv } from "@/helpers/getEnv";
