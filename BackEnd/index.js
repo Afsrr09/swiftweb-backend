@@ -52,6 +52,24 @@ app.use("/backend/comment", CommentRoute);
 app.use("/backend/blog-like", LikeRoute);
 app.use("/backend/contact", ContactRoute);
 
+// Ensure the database exists before attempting a pooled connection
+try {
+  const initConn = await (await import("mysql2/promise")).createConnection({
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    port: process.env.MYSQLPORT,
+  });
+  await initConn.query(
+    `CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQLDATABASE || "demodb"}\`;`
+  );
+  await initConn.end();
+  console.log("Database ensured successfully");
+} catch (error) {
+  console.error("Failed to ensure database exists:", error);
+  process.exit(1);
+}
+
 await mySqlDB
   .query("SELECT 1")
   .then(() => {
