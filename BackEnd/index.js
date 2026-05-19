@@ -32,7 +32,7 @@ app.use(express.json());
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://swiftweb-9i1d1t3j9-anarul-islam-s-projects.vercel.app",
+  "https://swiftweb-8167mdcyj-anarul-islam-s-projects.vercel.app",
 ];
 
 app.use(
