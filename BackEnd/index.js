@@ -30,21 +30,48 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.json());
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://swiftweb-8167mdcyj-anarul-islam-s-projects.vercel.app",
-];
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://swiftweb-8167mdcyj-anarul-islam-s-projects.vercel.app",
+// ];
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//   }),
+// );
+
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+    origin: (origin, callback) => {
+      // allow requests with no origin
+      if (!origin) {
+        return callback(null, true);
       }
+
+      // allow localhost
+      if (origin === "http://localhost:5173") {
+        return callback(null, true);
+      }
+
+      // allow all vercel domains
+      if (origin.includes(".vercel.app")) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
