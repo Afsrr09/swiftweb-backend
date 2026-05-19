@@ -4,35 +4,82 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 
-export const Register = async (req, res, next) => {
-  try {
-    const { name, email, password } = req.body;
-    // Check if user exists
-    const [rows] = await mySqlDB.query("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
+// export const Register = async (req, res, next) => {
+//   try {
+//     const { name, email, password } = req.body;
+//     // Check if user exists
+//     const [rows] = await mySqlDB.query("SELECT * FROM users WHERE email = ?", [
+//       email,
+//     ]);
 
-    if (rows.length > 0) {
-      return next(handleError(res, 400, "User already exists"));
+//     if (rows.length > 0) {
+//       return next(handleError(res, 400, "User already exists"));
+//     }
+
+//     // Hash password
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     const id = uuidv4();
+//     // Insert user into database
+//     const [result] = await mySqlDB.query(
+//       "INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)",
+//       [id, name, email, hashedPassword],
+//     );
+
+//     res.status(201).json({
+//       success: true,
+//       message: "User Registered Successfully",
+//       userId: id,
+//     });
+//   } catch (error) {
+//     next(handleError(res, 500, error.message));
+//   }
+// };
+
+export const Register = async (req, res) => {
+  try {
+    const { name, email, password } = req.body || {};
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email, and password are required",
+      });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const id = uuidv4();
-    // Insert user into database
-    const [result] = await mySqlDB.query(
-      "INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)",
-      [id, name, email, hashedPassword],
+    const [rows] = await mySqlDB.query(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
     );
 
-    res.status(201).json({
+    if (rows.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const id = uuidv4();
+
+    await mySqlDB.query(
+      "INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)",
+      [id, name, email, hashedPassword]
+    );
+
+    return res.status(201).json({
       success: true,
       message: "User Registered Successfully",
       userId: id,
     });
+
   } catch (error) {
-    next(handleError(res, 500, error.message));
+    console.error("REGISTER ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
