@@ -64,10 +64,10 @@ app.get("/", (req, res) => {
 // Ensure the database exists before attempting a pooled connection
 try {
   const initConn = await (await import("mysql2/promise")).createConnection({
-    host: process.env.MYSQLHOST,
-    user: process.env.MYSQLUSER,
-    password: process.env.MYSQLPASSWORD,
-    port: process.env.MYSQLPORT,
+    host: process.env.MYSQLHOST || process.env.DB_HOST,
+    user: process.env.MYSQLUSER || process.env.DB_USER,
+    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD,
+    port: process.env.MYSQLPORT || process.env.DB_PORT || 3306,
   });
   await initConn.query(
     `CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQLDATABASE || "demodb"}\`;`
