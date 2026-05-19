@@ -49,31 +49,25 @@ app.use(express.json());
 // );
 
 
+/* 1. CORS FIRST */
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // allow requests with no origin
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      // allow localhost
-      if (origin === "http://localhost:5173") {
-        return callback(null, true);
-      }
-
-      // allow all vercel domains
-      if (origin.includes(".vercel.app")) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Not allowed by CORS"));
-    },
+    origin: [
+      "http://localhost:5173",
+      "https://swiftweb-8167mdcyj-anarul-islam-s-projects.vercel.app",
+    ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
+  })
 );
+
+/* 2. BODY PARSER */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+/* 3. TEST ROUTE */
+app.get("/", (req, res) => {
+  res.send("API running");
+});
 
 //routes
 app.use("/backend/auth", AuthRoute);
