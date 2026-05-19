@@ -73,7 +73,7 @@ app.use(
   })
 );
 
-app.use(cors(...));        // 1
+
 app.use(express.json());   // 2
 app.use(express.urlencoded({ extended: true })); // 3
 
