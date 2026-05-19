@@ -60,6 +60,8 @@ app.use(
   })
 );
 
+app.options("*", cors());
+
 /* 2. BODY PARSER */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
